@@ -83,7 +83,7 @@ for index in range(len(search_terms)):
 
     apps_list = []
 
-    for i in range(number_of_results):
+    for i in range(len(result)):
         title = result[i].get("title")
         title = title.encode('ascii', 'ignore').decode('ascii')
         boolreq = True
@@ -123,8 +123,7 @@ for index in range(len(search_terms)):
 
     ##############################################################
 
-    if len(apps_list) == 0:
-        continue
+    
 
     ## result fields
     keyword = search_terms[index]
@@ -158,10 +157,10 @@ for index in range(len(search_terms)):
         days_since_release_list.append(f"{current_app.days_since_release:,}")
 
     number_of_new_apps = len(new_apps_downloads_list)
-    new_apps_yearly_median_downloads = statistics.median(new_apps_downloads_list)
-    new_apps_yearly_average_downloads = round(statistics.mean(new_apps_downloads_list))
-    new_app_highest_yearly_download = max(new_apps_downloads_list)
-    median_rating = round(statistics.median(rating_list), 3)
+    new_apps_yearly_median_downloads =  statistics.median(new_apps_downloads_list) if len(new_apps_downloads_list) != 0 else 0
+    new_apps_yearly_average_downloads = round(statistics.mean(new_apps_downloads_list)) if len(new_apps_downloads_list) != 0 else 0 
+    new_app_highest_yearly_download = max(new_apps_downloads_list) if len(new_apps_downloads_list) != 0 else 0
+    median_rating = round(statistics.median(rating_list), 3) if len(rating_list) != 0 else 0
     yearly_downloads = round(yearly_downloads)
 
 
@@ -199,4 +198,5 @@ for index in range(len(search_terms)):
     workbook.save(excel_filename)
     excel_autofit()
     current_row+=2
+
 
