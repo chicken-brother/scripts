@@ -14,8 +14,23 @@ import os
 excel_filename = "google-play-scrap-results.xls"
 excel_sheet_name = "Sheet 1"
 number_of_results = 30 # google play maximum is 30
-search_terms = ["anime wallpaper"] 
-titles_have_to_contain = [["anime", "wallpaper"]] # have to be same length as search_terms
+search_terms = []
+titles_have_to_contain = []
+#search_terms = ["weather app"] 
+#titles_have_to_contain = [["weather", "app"]] # have to be same length as search_terms
+keyword_file = open("wallpaper-ideas.txt", "r")
+file_lines = keyword_file.readlines()
+for line in file_lines:
+    line = line.rstrip()
+    if line != "" and line[0] != "#":
+        search_terms.append(line)
+        line_words = line.split()
+        titles_have_to_contain.append(line_words)
+        print(line)
+        print(line_words)
+        print("")
+
+
 
 def excel_autofit():
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -108,6 +123,9 @@ for index in range(len(search_terms)):
 
     ##############################################################
 
+    if len(apps_list) == 0:
+        continue
+
     ## result fields
     keyword = search_terms[index]
     number_of_apps = len(apps_list)
@@ -128,16 +146,16 @@ for index in range(len(search_terms)):
     rating_list = []
     sorted_apps = sorted(apps_list, key=lambda x: x.installs, reverse=True)
 
-    for app in apps_list:
-        if app.days_since_release < 365:
-            new_apps_downloads_list.append(app.installs)
-        all_downloads += app.installs
-        yearly_downloads += app.installs * 365 / app.days_since_release
-        rating_list.append(app.score)
+    for current_app in apps_list:
+        if current_app.days_since_release < 365:
+            new_apps_downloads_list.append(current_app.installs)
+        all_downloads += current_app.installs
+        yearly_downloads += current_app.installs * 365 / current_app.days_since_release
+        rating_list.append(current_app.score)
         
-    for app in sorted_apps:
-        downloads_list.append(f"{app.installs:,}")
-        days_since_release_list.append(f"{app.days_since_release:,}")
+    for current_app in sorted_apps:
+        downloads_list.append(f"{current_app.installs:,}")
+        days_since_release_list.append(f"{current_app.days_since_release:,}")
 
     number_of_new_apps = len(new_apps_downloads_list)
     new_apps_yearly_median_downloads = statistics.median(new_apps_downloads_list)
@@ -181,3 +199,4 @@ for index in range(len(search_terms)):
     workbook.save(excel_filename)
     excel_autofit()
     current_row+=2
+
