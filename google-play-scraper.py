@@ -199,4 +199,3 @@ for index in range(len(search_terms)):
     excel_autofit()
     current_row+=2
 
-
